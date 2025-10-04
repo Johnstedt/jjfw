@@ -1,0 +1,62 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.springframework.boot' version '3.3.4'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+// Set Java compatibility to 17 for Spring Boot 3.x
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
+group = 'Main.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot dependencies
+    implementation 'org.springframework.boot:spring-boot-starter-web:3.2.0'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.2.0'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:3.2.0'
+
+    // SpringDoc OpenAPI
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+
+    // jOOQ dependencies
+    implementation 'org.jooq:jooq:3.19.10'
+    implementation 'org.jooq:jooq-meta:3.19.10'
+    implementation 'org.jooq:jooq-codegen:3.19.10'
+
+    // PostgreSQL driver instead of H2
+    implementation 'org.postgresql:postgresql:42.7.3'
+
+    implementation project(':jjfw:backend:common')
+
+    // Optional: SLF4J for logging
+    implementation 'org.slf4j:slf4j-api:2.0.9'
+    implementation 'org.slf4j:slf4j-simple:2.0.9'
+
+    // Test dependencies
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+}
+
+configurations {
+    all {
+        exclude group: 'org.slf4j', module: 'slf4j-simple'
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+// Configure the main class for the application plugin
+application {
+    mainClass = 'Main.Application'
+}

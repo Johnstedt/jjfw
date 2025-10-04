@@ -3,6 +3,7 @@
  */
 package jjfw;
 
+import jjfw.common.Library;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

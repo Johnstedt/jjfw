@@ -29,9 +29,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
 
     implementation "org.json:json:20180813"
-    implementation "postgresql:postgresql:9.0-801.jdbc4"
-
-    implementation project(':jjfw:backend:common')
+    implementation "org.yaml:snakeyaml:2.2"
 }
 
 sourceCompatibility = 17
