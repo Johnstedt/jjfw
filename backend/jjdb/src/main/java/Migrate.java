@@ -9,6 +9,6 @@ public class Migrate {
     public static void main(String args[]) throws SQLException, IOException, InterruptedException {
         Dependency.call();
         Config.setSitePath(args[0]);
-        DatabaseMigrator.init();
+        DatabaseMigrator.createTables();
     }
 }

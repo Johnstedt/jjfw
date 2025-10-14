@@ -1,4 +1,4 @@
-package Main;
+
 
 import org.jooq.codegen.JavaGenerator;
 import org.jooq.codegen.JavaWriter;
@@ -91,7 +91,7 @@ public class CustomJavaGenerator extends JavaGenerator {
 
             // Replace with annotations + field declaration
             // Add newline after annotation and use same indentation for field
-            String replacement = indentation + annotations + "\n" + indentation + fieldDeclaration;
+            String replacement = indentation + annotations + indentation + fieldDeclaration;
             content = matcher.replaceFirst(Matcher.quoteReplacement(replacement));
         }
 

@@ -1,5 +1,6 @@
-package Main.example.config;
+package jjfw.config;
 
+import jjfw.common.Config;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
@@ -16,9 +17,9 @@ public class DatabaseConfig {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/tcdb");
-        dataSource.setUsername("pgsuper");
-        dataSource.setPassword("fff0");
+        dataSource.setUrl("jdbc:postgresql://" +Config.get("db_host") +":" + Config.getNum("db_port") + "/" + Config.get("db_name"));
+        dataSource.setUsername(Config.get("db_user"));
+        dataSource.setPassword(Config.get("db_pass"));
         return dataSource;
     }
 

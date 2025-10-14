@@ -1,4 +1,4 @@
-package Main.example.service;
+package jjfw.service;
 
 import org.jooq.DSLContext;
 import org.jooq.Table;
@@ -16,7 +16,7 @@ public abstract class BaseService<T, R extends Record> {
     protected DSLContext dsl;
 
     protected abstract Table<R> getTable();
-    protected abstract Field<Long> getIdField();
+    protected abstract Field<Integer> getIdField();
     protected abstract Class<T> getPojoClass();
 
     public List<T> findAll() {
@@ -24,7 +24,7 @@ public abstract class BaseService<T, R extends Record> {
                  .fetchInto(getPojoClass());
     }
 
-    public Optional<T> findById(Long id) {
+    public Optional<T> findById(Integer id) {
         T result = dsl.selectFrom(getTable())
                      .where(getIdField().eq(id))
                      .fetchOneInto(getPojoClass());
@@ -40,7 +40,7 @@ public abstract class BaseService<T, R extends Record> {
         return record.into(getPojoClass());
     }
 
-    public Optional<T> update(Long id, T entity) {
+    public Optional<T> update(Integer id, T entity) {
         R record = dsl.selectFrom(getTable())
                      .where(getIdField().eq(id))
                      .fetchOne();
@@ -58,7 +58,7 @@ public abstract class BaseService<T, R extends Record> {
         return Optional.of(record.into(getPojoClass()));
     }
 
-    public boolean delete(Long id) {
+    public boolean delete(Integer id) {
         int deletedRows = dsl.deleteFrom(getTable())
                             .where(getIdField().eq(id))
                             .execute();

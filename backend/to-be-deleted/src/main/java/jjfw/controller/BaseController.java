@@ -1,4 +1,4 @@
-package Main.example.controller;
+package jjfw.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -7,7 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import Main.example.service.BaseService;
+import jjfw.service.BaseService;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,7 +35,7 @@ public abstract class BaseController<T, S extends BaseService<T, ?>> {
     })
     public ResponseEntity<T> getById(
             @Parameter(description = "ID of the entity to retrieve")
-            @PathVariable Long id) {
+            @PathVariable Integer id) {
         Optional<T> entity = service.findById(id);
         return entity.map(ResponseEntity::ok)
                     .orElse(ResponseEntity.notFound().build());
@@ -61,7 +61,7 @@ public abstract class BaseController<T, S extends BaseService<T, ?>> {
     })
     public ResponseEntity<T> update(
             @Parameter(description = "ID of the entity to update")
-            @PathVariable Long id,
+            @PathVariable Integer id,
             @RequestBody T entity) {
         Optional<T> updated = service.update(id, entity);
         return updated.map(ResponseEntity::ok)
@@ -76,7 +76,7 @@ public abstract class BaseController<T, S extends BaseService<T, ?>> {
     })
     public ResponseEntity<Void> delete(
             @Parameter(description = "ID of the entity to delete")
-            @PathVariable Long id) {
+            @PathVariable Integer id) {
         boolean deleted = service.delete(id);
         return deleted ? ResponseEntity.noContent().build()
                       : ResponseEntity.notFound().build();

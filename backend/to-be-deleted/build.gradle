@@ -44,6 +44,14 @@ dependencies {
     // Test dependencies
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+
+    // JAXB dependencies for jOOQ codegen
+    implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:4.0.4'
+
+    // JJ dependencies
+    implementation project(':jjfw:backend:common')
+
 }
 
 configurations {

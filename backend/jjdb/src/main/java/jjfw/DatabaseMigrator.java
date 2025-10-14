@@ -28,9 +28,14 @@ public class DatabaseMigrator {
         }
     }
 
-    public static void init() throws SQLException, IOException, InterruptedException {
+    public static void createTables() throws SQLException, IOException, InterruptedException {
         getConnectionFromPool().createStatement().execute(sqlToString(
                 "src/main/java/database/0.0.1.sql"));
+    }
+
+    public static void purgeTables() throws SQLException, IOException, InterruptedException {
+        getConnectionFromPool().createStatement().execute(sqlToString(
+                "jjfw/backend/jjdb/src/main/java/queries/purge.sql"));
     }
 
     public static String sqlToString(String path) {

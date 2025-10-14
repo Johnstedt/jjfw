@@ -1,15 +1,21 @@
-package Main;
-
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
+import jjfw.common.Config;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.codegen.GenerationTool;
+import org.jooq.meta.jaxb.Generator;
 import org.jooq.impl.DSL;
-import org.jooq.meta.jaxb.*;
+import org.jooq.meta.jaxb.Jdbc;
+import org.jooq.meta.jaxb.Configuration;
+import org.jooq.meta.jaxb.Database;
+import org.jooq.meta.jaxb.Generate;
+import org.jooq.meta.jaxb.Target;
 
-public class Main {
+public class GenJooqStuff {
     public static void main(String[] args) throws SQLException {
+        Config.setSitePath(args[0]);
         generateSchemas();
 
        /* getDSL().execute("""
@@ -33,23 +39,21 @@ public class Main {
         """);
 */
 
-
     }
 
     public static DSLContext getDSL() throws SQLException {
-        var connection = DriverManager.getConnection(
+        /*var connection = DriverManager.getConnection(
                 "jdbc:postgresql://localhost:5432/tcdb", "pgsuper", "fff0");
-
-        return DSL.using(connection, SQLDialect.POSTGRES);
-
+        return DSL.using(connection, SQLDialect.POSTGRES);*/
+        return null;
     }
 
     public static Jdbc getMetaDatabase() {
         return new Jdbc()
             .withDriver("org.postgresql.Driver")
-            .withUrl("jdbc:postgresql://localhost:5432/tcdb")
-            .withUser("pgsuper")
-            .withPassword("fff0");
+            .withUrl("jdbc:postgresql://" + Config.get("db_host") +":" + Config.getNum("db_port") + "/" + Config.get("db_name"))
+            .withUser(Config.get("db_user"))
+            .withPassword(Config.get("db_pass"));
     }
 
     public static void generateSchemas() {
@@ -57,8 +61,8 @@ public class Main {
             // Configure jOOQ code generation
             Configuration configuration = new Configuration()
                     .withJdbc(getMetaDatabase())
-                    .withGenerator(new Generator()
-                            .withName("Main.CustomJavaGenerator")
+                    .withGenerator(new org.jooq.meta.jaxb.Generator()
+                            .withName("CustomJavaGenerator")
                             .withDatabase(new Database()
                                     .withName("org.jooq.meta.postgres.PostgresDatabase")
                                     .withInputSchema("public"))
