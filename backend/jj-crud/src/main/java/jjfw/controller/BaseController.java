@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jjfw.service.BaseService;
 import java.util.List;
 import java.util.Optional;
+import java.util.Map;
 
 public abstract class BaseController<T, S extends BaseService<T, ?>> {
 
@@ -24,6 +25,14 @@ public abstract class BaseController<T, S extends BaseService<T, ?>> {
     @ApiResponse(responseCode = "200", description = "Successfully retrieved list")
     public ResponseEntity<List<T>> getAll() {
         List<T> entities = service.findAll();
+        return ResponseEntity.ok(entities);
+    }
+
+    @GetMapping("/filter")
+    @Operation(summary = "Filter entities", description = "Filter by exact / range (Low/High suffix) / like (Like suffix) values. Supports sort, limit, offset.")
+    @ApiResponse(responseCode = "200", description = "Successfully retrieved filtered list")
+    public ResponseEntity<List<T>> filter(@RequestParam Map<String,String> params) {
+        List<T> entities = service.filter(params);
         return ResponseEntity.ok(entities);
     }
 
