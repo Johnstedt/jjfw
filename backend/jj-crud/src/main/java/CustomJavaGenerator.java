@@ -81,19 +81,30 @@ public class CustomJavaGenerator extends JavaGenerator {
 
     private String addAnnotationsToField(String content, String fieldName, String annotations) {
         // Pattern to find field declarations: private Type fieldName;
-        //String fieldPattern = "(\\s*)(private\\s+\\w+(?:<[^>]*>)?\\s+" + Pattern.quote(fieldName) + "\\s*;)";
+        String fieldPattern = "(\\s*)(private\\s+\\w+(?:<[^>]*>)?\\s+" + Pattern.quote(fieldName) + "\\s*;)";
         // Find field declaration at the start of a line for precise insertion
-        String fieldPattern = "(?m)^(\\s*)(private\\s+[_$A-Za-z][_$A-Za-z0-9]*(?:<[^>]*>)?\\s+" + Pattern.quote(fieldName) + "\\s*;)";
+        //String fieldPattern = "(?m)^(\\s*)(private\\s+[_$A-Za-z][_$A-Za-z0-9]*(?:<[^>]*>)?\\s+" + Pattern.quote(fieldName) + "\\s*;)";
         Pattern pattern = Pattern.compile(fieldPattern, Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(content);
 
         if (matcher.find()) {
             String indentation = matcher.group(1);
+
+            System.out.println("Indentation");
+            System.out.println(indentation);
+
             String fieldDeclaration = matcher.group(2);
+            System.out.println("Field declaration");
+            System.out.println(fieldDeclaration);
 
             // Replace with annotations + field declaration
             // Add newline after annotation and use same indentation for field
-            String replacement = indentation + annotations + "\n" + indentation + fieldDeclaration;
+            String replacement = indentation + annotations + "\n" + indentation.replaceAll("\n", "") + fieldDeclaration;
+
+            System.out.println("Replacement");
+            System.out.println(replacement);
+
+
             content = matcher.replaceFirst(Matcher.quoteReplacement(replacement));
         }
 
