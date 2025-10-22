@@ -31,6 +31,14 @@ public class Config {
         return config.getJSONObject("log").getInt(s);
     }
 
+    public static String getAws(String s) {
+        return config.getJSONObject("aws").getInt(s);
+    }
+
+    public static String getCognito(String s) {
+        return config.getJSONObject("cognito").getInt(s);
+    }
+
     private static JSONObject parseJSONFile(String filename) throws JSONException, IOException {
         String content = new String(Files.readAllBytes(Paths.get(filename)));
         return new JSONObject(content);
