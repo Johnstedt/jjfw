@@ -55,8 +55,15 @@ public abstract class BaseService<T, R extends UpdatableRecord<R>> {
         R rec = dsl.fetchOne(getTable(), getIdField().eq(id));
         if (rec == null) return Optional.empty();
 
-        // Populate new values from POJO
+        // Preserve the current primary key to avoid it being overwritten by the incoming entity
+        Integer currentId = rec.get(getIdField());
+
+        // Populate new values from POJO (may set ID to null/different -> restore afterwards)
         rec.from(entity);
+
+        // Restore ID and ensure it is not treated as changed
+        rec.set(getIdField(), currentId);
+
         // Ensure ID not updated; respect @Ignore for UPDATE
         for (Field<?> f : rec.fields()) {
             if (f.equals(getIdField())) {

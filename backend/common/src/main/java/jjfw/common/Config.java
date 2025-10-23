@@ -32,11 +32,11 @@ public class Config {
     }
 
     public static String getAws(String s) {
-        return config.getJSONObject("aws").getInt(s);
+        return config.getJSONObject("aws").getString(s);
     }
 
     public static String getCognito(String s) {
-        return config.getJSONObject("cognito").getInt(s);
+        return config.getJSONObject("cognito").getString(s);
     }
 
     private static JSONObject parseJSONFile(String filename) throws JSONException, IOException {
