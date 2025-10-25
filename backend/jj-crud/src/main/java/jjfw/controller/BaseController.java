@@ -1,5 +1,6 @@
 package jjfw.controller;
 
+import org.jooq.DSLContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,19 +12,33 @@ import jjfw.service.BaseService;
 import java.util.List;
 import java.util.Optional;
 import java.util.Map;
+import org.springframework.transaction.annotation.Transactional;
 
 public abstract class BaseController<T, S extends BaseService<T, ?>> {
 
     protected final S service;
+    protected final DSLContext dsl;
 
-    public BaseController(S service) {
+    public BaseController(S service, DSLContext dsl) {
         this.service = service;
+        this.dsl = dsl;
     }
 
     @GetMapping
     @Operation(summary = "Get all entities", description = "Retrieve a list of all entities")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved list")
+    @Transactional(readOnly = true)
     public ResponseEntity<List<T>> getAll() {
+
+        // USE DSL to see what user id is set for RLS debugging
+        try {
+            String userId = dsl.resultQuery("select current_setting('app.user_id', true)").fetchOne(0, String.class);
+            String groups = dsl.resultQuery("select current_setting('app.groups', true)").fetchOne(0, String.class);
+            System.out.println("RLS debug -> app.user_id=" + userId + ", app.groups=" + groups);
+        } catch (Exception ignored) {
+            System.out.println(ignored.getCause().toString() + ignored.fillInStackTrace());
+        }
+
         List<T> entities = service.findAll();
         return ResponseEntity.ok(entities);
     }
@@ -31,6 +46,7 @@ public abstract class BaseController<T, S extends BaseService<T, ?>> {
     @GetMapping("/filter")
     @Operation(summary = "Filter entities", description = "Filter by exact / range (Low/High suffix) / like (Like suffix) values. Supports sort, limit, offset.")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved filtered list")
+    @Transactional(readOnly = true)
     public ResponseEntity<List<T>> filter(@RequestParam Map<String,String> params) {
         List<T> entities = service.filter(params);
         return ResponseEntity.ok(entities);
@@ -42,6 +58,7 @@ public abstract class BaseController<T, S extends BaseService<T, ?>> {
         @ApiResponse(responseCode = "200", description = "Successfully retrieved entity"),
         @ApiResponse(responseCode = "404", description = "Entity not found")
     })
+    @Transactional(readOnly = true)
     public ResponseEntity<T> getById(
             @Parameter(description = "ID of the entity to retrieve")
             @PathVariable Integer id) {
@@ -56,6 +73,7 @@ public abstract class BaseController<T, S extends BaseService<T, ?>> {
         @ApiResponse(responseCode = "201", description = "Successfully created entity"),
         @ApiResponse(responseCode = "400", description = "Invalid input")
     })
+    @Transactional
     public ResponseEntity<T> create(@RequestBody T entity) {
         T created = service.create(entity);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
@@ -68,6 +86,7 @@ public abstract class BaseController<T, S extends BaseService<T, ?>> {
         @ApiResponse(responseCode = "404", description = "Entity not found"),
         @ApiResponse(responseCode = "400", description = "Invalid input")
     })
+    @Transactional
     public ResponseEntity<T> update(
             @Parameter(description = "ID of the entity to update")
             @PathVariable Integer id,
@@ -83,6 +102,7 @@ public abstract class BaseController<T, S extends BaseService<T, ?>> {
         @ApiResponse(responseCode = "204", description = "Successfully deleted entity"),
         @ApiResponse(responseCode = "404", description = "Entity not found")
     })
+    @Transactional
     public ResponseEntity<Void> delete(
             @Parameter(description = "ID of the entity to delete")
             @PathVariable Integer id) {
