@@ -23,31 +23,15 @@ public class CognitoBroker {
                 .build();
     }
 
-    public static Object verifyUser(String accessToken) {
+    public static GetUserResult verifyUser(String accessToken) {
         try {
             AWSCognitoIdentityProvider cognitoClient = CognitoBroker.getCognitoClient();
 
             GetUserRequest authRequest = new GetUserRequest().withAccessToken(accessToken);
             return cognitoClient.getUser(authRequest);
 
-        } catch (NotAuthorizedException ex) {
-            if (ex.getErrorMessage().equals("Access Token has expired")) {
-                return StatusResponse.Builder.newInstance()
-                        .withStatus("Access Token has expired")
-                        .withError(true)
-                        .build();
-            }
-            else {
-                return StatusResponse.Builder.newInstance()
-                        .withStatus("exception during validation: {}" + ex.getMessage())
-                        .withError(true)
-                        .build();
-            }
-        } catch (TooManyRequestsException ex) {
-            return StatusResponse.Builder.newInstance()
-                    .withStatus("caught TooManyRequestsException, delaying then retrying")
-                    .withError(true)
-                    .build();
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
         }
     }
 

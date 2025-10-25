@@ -50,6 +50,25 @@ public abstract class BaseService<T, R extends UpdatableRecord<R>> {
         return rec.into(getPojoClass());
     }
 
+    public T create(T entity, DSLContext customDSL) {
+        R rec = customDSL.newRecord(getTable());
+        // Populate from POJO
+        rec.from(entity);
+        // Skip ID and ignored fields on create
+        for (Field<?> f : rec.fields()) {
+            if (f.equals(getIdField())) {
+                rec.changed(f, false);
+                continue;
+            }
+            String javaName = snakeToCamel(f.getName());
+            if (isIgnored(javaName, Ignore.Operation.CREATE)) {
+                rec.changed(f, false);
+            }
+        }
+        rec.store(); // INSERT
+        return rec.into(getPojoClass());
+    }
+
     public Optional<T> update(Integer id, T entity) {
         R rec = dsl.fetchOne(getTable(), getIdField().eq(id));
         if (rec == null) return Optional.empty();

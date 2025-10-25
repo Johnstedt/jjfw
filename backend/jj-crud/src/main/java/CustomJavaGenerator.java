@@ -141,6 +141,9 @@ public class CustomJavaGenerator extends JavaGenerator {
         if (usesJsonProperty && !content.contains("import com.fasterxml.jackson.annotation.JsonProperty;")) {
             content = content.replaceFirst("(package \\S+;\\s+)", "$1import com.fasterxml.jackson.annotation.JsonProperty;\n");
         }
+        if (usesJsonProperty && !content.contains("import com.fasterxml.jackson.annotation.JsonIgnore;")) {
+            content = content.replaceFirst("(package \\S+;\\s+)", "$1import com.fasterxml.jackson.annotation.JsonIgnore;\n");
+        }
         if (usesIgnore && !content.contains("import jjfw.annotations.Ignore;")) {
             content = content.replaceFirst("(package \\S+;\\s+)", "$1import jjfw.annotations.Ignore;\n");
         }

@@ -29,16 +29,6 @@ public abstract class BaseController<T, S extends BaseService<T, ?>> {
     @ApiResponse(responseCode = "200", description = "Successfully retrieved list")
     @Transactional(readOnly = true)
     public ResponseEntity<List<T>> getAll() {
-
-        // USE DSL to see what user id is set for RLS debugging
-        try {
-            String userId = dsl.resultQuery("select current_setting('app.user_id', true)").fetchOne(0, String.class);
-            String groups = dsl.resultQuery("select current_setting('app.groups', true)").fetchOne(0, String.class);
-            System.out.println("RLS debug -> app.user_id=" + userId + ", app.groups=" + groups);
-        } catch (Exception ignored) {
-            System.out.println(ignored.getCause().toString() + ignored.fillInStackTrace());
-        }
-
         List<T> entities = service.findAll();
         return ResponseEntity.ok(entities);
     }
