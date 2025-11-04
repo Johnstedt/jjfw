@@ -1,4 +1,4 @@
-package jjfw.auth;
+package jjfw.aws;
 
 import org.json.JSONObject;
 

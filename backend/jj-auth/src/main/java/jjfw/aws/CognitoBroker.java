@@ -1,4 +1,4 @@
-package jjfw.auth;
+package jjfw.aws;
 
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
