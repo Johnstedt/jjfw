@@ -15,6 +15,10 @@ public class Config {
         return config.getString(s);
     }
 
+    public static String getOrDefault(String s, String defaultValue) {
+        return config.optString(s, defaultValue);
+    }
+
     public static int getNum(String s) {
         return config.getInt(s);
     }

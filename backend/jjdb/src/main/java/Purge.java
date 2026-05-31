@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class Purge {
-    public static void main(String args[]) throws SQLException, IOException, InterruptedException {
+    public static void main(String[] args) throws SQLException, IOException {
         Dependency.call();
         Config.setSitePath(args[0]);
         DatabaseMigrator.purgeTables();
